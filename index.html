@@ -3,490 +3,1302 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文本工具集 - Text Toolkit</title>
+    <title>实用工具箱 - 您的在线工具助手</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --primary-color: #4f46e5;
-            --primary-hover: #4338ca;
-            --secondary-color: #64748b;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --border-color: #e2e8f0;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --border: #334155;
+        }
+        .light-mode {
             --text-primary: #1e293b;
             --text-secondary: #64748b;
-            --success-color: #22c55e;
-            --warning-color: #f59e0b;
-            --error-color: #ef4444;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --border: #e2e8f0;
         }
-        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            line-height: 1.6;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--bg);
             min-height: 100vh;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
         }
         
-        header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #6366f1 100%);
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%);
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .header h1 {
             color: white;
-            padding: 2rem 1rem;
-            text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .theme-toggle, .tips-toggle {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+        .theme-toggle:hover, .tips-toggle:hover {
+            background: rgba(255,255,255,0.3);
         }
         
-        header h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+        .nav-categories {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .nav-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background: var(--card);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .nav-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
         }
         
-        header p {
-            font-size: 1rem;
-            opacity: 0.9;
+        .tips-bar {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 12px 20px;
+            background: linear-gradient(90deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary);
+        }
+        .tips-bar p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem 1rem;
+            padding: 0 20px 100px;
         }
         
-        .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        .tool-section {
+            display: none;
+        }
+        .tool-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
         }
         
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-        }
-        
-        .card-title {
-            font-size: 1.25rem;
+        .section-title {
+            font-size: 1.5rem;
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 1rem;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 10px;
         }
         
-        .card-title svg {
-            width: 20px;
-            height: 20px;
-            color: var(--primary-color);
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 20px;
         }
         
-        .text-input-section {
-            margin-bottom: 1rem;
+        .tool-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
         }
-        
-        .text-input-section label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            color: var(--text-secondary);
+        .tool-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            border-color: var(--primary);
         }
-        
-        textarea {
-            width: 100%;
-            min-height: 150px;
-            padding: 1rem;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 1rem;
-            resize: vertical;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-            background: var(--card-bg);
+        .tool-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .tool-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
             color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tool-card-badge {
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            background: var(--primary);
+            color: white;
+        }
+        .tool-card-desc {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 12px;
         }
         
-        textarea:focus {
+        textarea, input[type="text"], input[type="number"], input[type="password"], input[type="date"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            margin-bottom: 8px;
+        }
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        textarea:focus, input:focus {
             outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-        }
-        
-        textarea::placeholder {
-            color: var(--secondary-color);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
         }
         
         .btn-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
+            gap: 8px;
+            margin-top: 8px;
         }
-        
         .btn {
-            padding: 0.75rem 1.5rem;
+            padding: 8px 14px;
             border: none;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 500;
+            border-radius: 6px;
+            color: white;
             cursor: pointer;
-            transition: all 0.2s ease;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 5px;
         }
+        .btn-primary { background: var(--primary); }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-success { background: var(--success); }
+        .btn-success:hover { background: #16a34a; }
+        .btn-warning { background: var(--warning); }
+        .btn-warning:hover { background: #d97706; }
+        .btn-error { background: var(--error); }
+        .btn-error:hover { background: #dc2626; }
         
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-1px);
-        }
-        
-        .btn-secondary {
-            background-color: var(--border-color);
+        .result-box {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 8px;
+            min-height: 50px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
             color: var(--text-primary);
-        }
-        
-        .btn-secondary:hover {
-            background-color: #cbd5e1;
-        }
-        
-        .btn-success {
-            background-color: var(--success-color);
-            color: white;
-        }
-        
-        .btn-success:hover {
-            background-color: #16a34a;
-        }
-        
-        .btn-warning {
-            background-color: var(--warning-color);
-            color: white;
-        }
-        
-        .btn-warning:hover {
-            background-color: #d97706;
-        }
-        
-        .btn-error {
-            background-color: var(--error-color);
-            color: white;
-        }
-        
-        .btn-error:hover {
-            background-color: #dc2626;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .stat-card {
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-            padding: 1rem;
-            border-radius: 8px;
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-        
-        .stat-label {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            margin-top: 0.25rem;
-        }
-        
-        .output-section {
-            margin-top: 1rem;
-        }
-        
-        .output-section label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            color: var(--text-secondary);
-        }
-        
-        .output-box {
-            background: #1e293b;
-            color: #f1f5f9;
-            padding: 1rem;
-            border-radius: 8px;
-            min-height: 100px;
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 0.9rem;
-            overflow-x: auto;
-            white-space: pre-wrap;
             word-break: break-all;
         }
         
-        .copied-hint {
-            display: inline-block;
-            margin-left: 0.5rem;
-            padding: 0.25rem 0.75rem;
-            background-color: var(--success-color);
-            color: white;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            opacity: 0;
-            transition: opacity 0.2s ease;
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin: 10px 0;
+        }
+        .stat-item {
+            background: var(--bg);
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
         }
         
-        .copied-hint.show {
+        .select-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin: 8px 0;
+            flex-wrap: wrap;
+        }
+        .select-row label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        .select-row select {
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            animation: slideInTop 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            max-width: 350px;
+        }
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--error); }
+        .toast.info { background: var(--primary); }
+        
+        .global-actions {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 99;
+        }
+        .float-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .float-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .qrcode-result {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        #qrcodeCanvas {
+            background: white;
+            padding: 8px;
+            border-radius: 6px;
+        }
+        
+        .todo-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: var(--bg);
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border);
+        }
+        .todo-checkbox {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .todo-checkbox.checked {
+            background: var(--success);
+            border-color: var(--success);
+        }
+        .todo-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 11px;
+        }
+        .todo-text {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+        .todo-text.done {
+            text-decoration: line-through;
+            color: var(--text-secondary);
+        }
+        .todo-del {
+            padding: 4px 10px;
+            border: none;
+            border-radius: 4px;
+            background: var(--error);
+            color: white;
+            cursor: pointer;
+            font-size: 0.75rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .todo-item:hover .todo-del {
             opacity: 1;
         }
         
-        .footer {
-            text-align: center;
-            padding: 2rem 1rem;
-            color: var(--text-secondary);
-            font-size: 0.875rem;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        
-        .footer a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .footer a:hover {
-            text-decoration: underline;
+        @keyframes slideInTop {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         @media (max-width: 768px) {
-            header h1 {
-                font-size: 1.5rem;
-            }
-            
-            .btn-group {
-                flex-direction: column;
-            }
-            
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
+            .header-content { flex-direction: column; text-align: center; }
+            .nav-categories { justify-content: center; }
+            .nav-btn { padding: 8px 12px; font-size: 0.8rem; }
+            .tool-grid { grid-template-columns: 1fr; }
+            .global-actions { bottom: 15px; right: 15px; }
+            .float-btn { width: 44px; height: 44px; font-size: 1rem; }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>文本工具集</h1>
-        <p>多功能文本处理工具，支持字符统计、大小写转换、文本反转等功能</p>
+    <header class="header">
+        <div class="header-content">
+            <h1>🛠️ 实用工具箱</h1>
+            <div class="header-right">
+                <button class="tips-toggle" onclick="toggleTips()">
+                    <span>💡</span>小贴士
+                </button>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <span id="themeIcon">🌙</span>
+                </button>
+            </div>
+        </div>
     </header>
     
+    <nav class="nav-categories">
+        <button class="nav-btn active" onclick="switchCategory('text')">
+            <span>📝</span>文本处理
+        </button>
+        <button class="nav-btn" onclick="switchCategory('life')">
+            <span>🏠</span>生活常用
+        </button>
+        <button class="nav-btn" onclick="switchCategory('study')">
+            <span>📚</span>学习办公
+        </button>
+        <button class="nav-btn" onclick="switchCategory('todo')">
+            <span>✅</span>待办管理
+        </button>
+    </nav>
+    
+    <div class="tips-bar" id="tipsBar">
+        <p>💡 <strong>小贴士：</strong>所有工具都在本地浏览器运行，数据不会上传到服务器。点击右下角按钮可一键清空或复制所有结果。</p>
+    </div>
+    
     <main class="container">
-        <div class="card">
-            <div class="card-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                    <line x1="16" y1="13" x2="8" y2="13"/>
-                    <line x1="16" y1="17" x2="8" y2="17"/>
-                    <polyline points="10 9 9 9 8 9"/>
-                </svg>
-                输入文本
+        <!-- 文本处理工具 -->
+        <section id="text-section" class="tool-section active">
+            <h2 class="section-title">📝 文本处理工具</h2>
+            <div class="tool-grid">
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-card-title">🔄 一键去换行</div>
+                    </div>
+                    <div class="tool-card-desc">快速删除所有多余换行，整理杂乱文案</div>
+                    <textarea id="removeLineInput" placeholder="输入需要去换行的文本..."></textarea>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="removeLineBreaks()">去换行</button>
+                        <button class="btn btn-success" onclick="copyResultById('removeLineInput', 'removeLineOutput')">复制结果</button>
+                    </div>
+                    <div class="result-box" id="removeLineOutput"></div>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-card-title">📋 一键去重复</div>
+                    </div>
+                    <div class="tool-card-desc">自动删除重复的句子和内容</div>
+                    <textarea id="removeDupInput" placeholder="输入需要去重复的文本，每行一条..."></textarea>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="removeDuplicates()">去重复</button>
+                        <button class="btn btn-success" onclick="copyResultById('removeDupInput', 'removeDupOutput')">复制结果</button>
+                    </div>
+                    <div class="result-box" id="removeDupOutput"></div>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-card-title">🌐 中英文分离</div>
+                    </div>
+                    <div class="tool-card-desc">将中文和英文单独分开提取</div>
+                    <textarea id="separateInput" placeholder="输入需要分离中英文的文本..."></textarea>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="separateChineseEnglish()">分离</button>
+                        <button class="btn btn-success" onclick="copyResultById('separateInput', 'separateOutput')">复制结果</button>
+                    </div>
+                    <div class="result-box" id="separateOutput"></div>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-card-title">🅿️ 拼音转换</div>
+                    </div>
+                    <div class="tool-card-desc">汉字一键转换为拼音</div>
+                    <textarea id="pinyinInput" placeholder="输入需要转换拼音的汉字..."></textarea>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="convertToPinyin()">转换拼音</button>
+                        <button class="btn btn-success" onclick="copyResultById('pinyinInput', 'pinyinOutput')">复制结果</button>
+                    </div>
+                    <div class="result-box" id="pinyinOutput"></div>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-card-title">繁↔简 简繁体互换</div>
+                    </div>
+                    <div class="tool-card-desc">简体转繁体、繁体转简体</div>
+                    <textarea id="simpTradInput" placeholder="输入需要转换的文字..."></textarea>
+                    <div class="select-row">
+                        <label>转换：</label>
+                        <select id="simpTradType">
+                            <option value="toTraditional">简体→繁体</option>
+                            <option value="toSimplified">繁体→简体</option>
+                        </select>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="convertSimpTrad()">转换</button>
+                        <button class="btn btn-success" onclick="copyResultById('simpTradInput', 'simpTradOutput')">复制结果</button>
+                    </div>
+                    <div class="result-box" id="simpTradOutput"></div>
+                </div>
             </div>
-            <div class="text-input-section">
-                <label for="inputText">请输入或粘贴要处理的文本：</label>
-                <textarea id="inputText" placeholder="在这里输入文本...&#10;&#10;示例：Hello World! 你好世界！&#10;这是一个文本处理工具。"></textarea>
-            </div>
-            
-            <div class="btn-group">
-                <button class="btn btn-primary" onclick="processText('uppercase')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M17 20h5v-2a3 3 0 0 0-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 0 1 5.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 0 1 9.288 0M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm6 3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 10a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/>
-                    </svg>
-                    转大写
-                </button>
-                <button class="btn btn-primary" onclick="processText('lowercase')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M17 20h5v-2a3 3 0 0 0-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 0 1 5.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 0 1 9.288 0M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm6 3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 10a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/>
-                    </svg>
-                    转小写
-                </button>
-                <button class="btn btn-secondary" onclick="processText('capitalize')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 7v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                    首字母大写
-                </button>
-                <button class="btn btn-warning" onclick="processText('reverse')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="1 1 22 1 22 21 1 21"/>
-                        <path d="M16 18V6l-5 5-5-5v12"/>
-                    </svg>
-                    反转文本
-                </button>
-                <button class="btn btn-success" onclick="processText('trim')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 6l3 6h12l3-6M16 19H8M21 19H3"/>
-                    </svg>
-                    去除空格
-                </button>
-                <button class="btn btn-error" onclick="clearAll()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-                    </svg>
-                    清空
-                </button>
-            </div>
-        </div>
+        </section>
         
-        <div class="card">
-            <div class="card-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m0 0V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/>
-                </svg>
-                统计信息
+        <!-- 生活常用工具 -->
+        <section id="life-section" class="tool-section">
+            <h2 class="section-title">🏠 生活常用工具</h2>
+            <div class="tool-grid">
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-card-title">⏰ 时间戳转换</div>
+                    </div>
+                    <div class="tool-card-desc">时间戳和北京时间互相转换</div>
+                    <input type="text" id="timestampInput" placeholder="输入时间戳（如：1716748800）或日期">
+                    <div class="select-row">
+                        <label>类型：</label>
+                        <select id="timestampType">
+                            <option value="toDate">时间戳 → 北京时间</option>
+                            <option value="toStamp">北京时间 → 时间戳</option>
+                        </select>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="convertTimestamp()">转换</button>
+                        <button class="btn btn-warning" onclick="getCurrentTimestamp()">获取当前</button>
+                    </div>
+                    <div class="result-box" id="timestampOutput"></div>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-card-title">📅 日期计算</div>
+                    </div>
+                    <div class="tool-card-desc">计算天数差、倒计时</div>
+                    <input type="date" id="date1Input">
+                    <input type="date" id="date2Input">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="calcDateDiff()">相差天数</button>
+                        <button class="btn btn-warning" onclick="calcCountdown()">倒计时</button>
+                    </div>
+                    <div class="result-box" id="dateOutput"></div>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-card-title">🎲 随机取名</div>
+                    </div>
+                    <div class="tool-card-desc">随机生成网名、昵称、账号名</div>
+                    <div class="select-row">
+                        <label>类型：</label>
+                        <select id="nameType">
+                            <option value="nickname">随机昵称</option>
+                            <option value="username">随机账号</option>
+                            <option value="animal">萌宠名字</option>
+                        </select>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="generateName()">生成</button>
+                        <button class="btn btn-success" onclick="generateName()">换一个</button>
+                    </div>
+                    <div class="result-box" id="nameOutput"></div>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-card-title">🔐 密码生成</div>
+                    </div>
+                    <div class="tool-card-desc">生成高强度安全密码</div>
+                    <div class="select-row">
+                        <label>长度：</label>
+                        <input type="number" id="pwdLength" value="16" min="6" max="64" style="width: 70px;">
+                        <label><input type="checkbox" id="pwdUpper" checked> 大写</label>
+                        <label><input type="checkbox" id="pwdLower" checked> 小写</label>
+                        <label><input type="checkbox" id="pwdNumber" checked> 数字</label>
+                        <label><input type="checkbox" id="pwdSymbol" checked> 符号</label>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="generatePassword()">生成密码</button>
+                        <button class="btn btn-success" onclick="copyResultById('pwdInput', 'pwdOutput')">复制</button>
+                    </div>
+                    <div class="result-box" id="pwdOutput"></div>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-card-title">💰 大小写金额转换</div>
+                    </div>
+                    <div class="tool-card-desc">数字转中文大写金额（做账填表）</div>
+                    <input type="text" id="moneyInput" placeholder="输入数字（如：12345.67）">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="convertToChineseMoney()">转换大写</button>
+                        <button class="btn btn-success" onclick="copyResultById('moneyInput', 'moneyOutput')">复制</button>
+                    </div>
+                    <div class="result-box" id="moneyOutput"></div>
+                </div>
             </div>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value" id="charCount">0</div>
-                    <div class="stat-label">字符数（含空格）</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="charCountNoSpace">0</div>
-                    <div class="stat-label">字符数（不含空格）</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="wordCount">0</div>
-                    <div class="stat-label">单词数</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="lineCount">0</div>
-                    <div class="stat-label">行数</div>
-                </div>
-            </div>
-        </div>
+        </section>
         
-        <div class="card">
-            <div class="card-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                    <line x1="16" y1="13" x2="8" y2="13"/>
-                    <line x1="16" y1="17" x2="8" y2="17"/>
-                    <polyline points="10 9 9 9 8 9"/>
-                </svg>
-                处理结果
-            </div>
-            <div class="output-section">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                    <label>输出结果：</label>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button class="btn btn-secondary" onclick="copyResult()">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                            </svg>
-                            复制结果
-                        </button>
-                        <span class="copied-hint" id="copiedHint">已复制!</span>
+        <!-- 学习办公工具 -->
+        <section id="study-section" class="tool-section">
+            <h2 class="section-title">📚 学习办公工具</h2>
+            <div class="tool-grid">
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-card-title">🔢 进制转换</div>
+                    </div>
+                    <div class="tool-card-desc">二进制、八进制、十进制、十六进制互转</div>
+                    <input type="text" id="baseInput" placeholder="输入数字">
+                    <div class="select-row">
+                        <label>从：</label>
+                        <select id="baseFrom">
+                            <option value="2">二进制</option>
+                            <option value="8">八进制</option>
+                            <option value="10" selected>十进制</option>
+                            <option value="16">十六进制</option>
+                        </select>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="convertBase()">转换</button>
+                    </div>
+                    <div class="result-box" id="baseOutput"></div>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-card-title">📊 字数统计升级版</div>
+                    </div>
+                    <div class="tool-card-desc">含标点、不含标点、纯汉字精准统计</div>
+                    <textarea id="wordCountInput" placeholder="输入需要统计的文字..." oninput="updateWordStats(); saveToLocal('wordCountInput', this.value)"></textarea>
+                    <div class="stats-row">
+                        <div class="stat-item"><div class="stat-value" id="wcTotal">0</div><div class="stat-label">总字符</div></div>
+                        <div class="stat-item"><div class="stat-value" id="wcChinese">0</div><div class="stat-label">中文字符数</div></div>
+                        <div class="stat-item"><div class="stat-value" id="wcEnglish">0</div><div class="stat-label">英文单词数</div></div>
+                        <div class="stat-item"><div class="stat-value" id="wcNoSpace">0</div><div class="stat-label">不含空格</div></div>
+                        <div class="stat-item"><div class="stat-value" id="wcLines">0</div><div class="stat-label">行数</div></div>
+                        <div class="stat-item"><div class="stat-value" id="wcPunct">0</div><div class="stat-label">标点数</div></div>
                     </div>
                 </div>
-                <div class="output-box" id="outputBox">处理后的文本将显示在这里...</div>
+                
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-card-title">📱 二维码生成</div>
+                    </div>
+                    <div class="tool-card-desc">输入文字或链接，一键生成二维码</div>
+                    <input type="text" id="qrInput" placeholder="输入文字或链接...">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="generateQR()">生成</button>
+                        <button class="btn btn-success" onclick="downloadQR()">下载</button>
+                    </div>
+                    <div class="qrcode-result">
+                        <canvas id="qrcodeCanvas" width="180" height="180"></canvas>
+                    </div>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-card-title">📐 排版缩进</div>
+                    </div>
+                    <div class="tool-card-desc">一键整齐排版，自动处理缩进</div>
+                    <textarea id="indentInput" placeholder="输入需要排版的文本..."></textarea>
+                    <div class="select-row">
+                        <label>缩进：</label>
+                        <select id="indentType">
+                            <option value="2">2空格</option>
+                            <option value="4">4空格</option>
+                            <option value="tab">Tab</option>
+                        </select>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="formatIndent()">排版</button>
+                        <button class="btn btn-success" onclick="copyResultById('indentInput', 'indentOutput')">复制</button>
+                    </div>
+                    <div class="result-box" id="indentOutput"></div>
+                </div>
             </div>
-        </div>
+        </section>
+        
+        <!-- 待办管理 -->
+        <section id="todo-section" class="tool-section">
+            <h2 class="section-title">✅ 待办事项管理</h2>
+            <div class="tool-grid">
+                <div class="tool-card" style="grid-column: span 2;">
+                    <div class="tool-card-header">
+                        <div class="tool-card-title">📝 我的待办</div>
+                        <span class="tool-card-badge">本地存储</span>
+                    </div>
+                    <div class="tool-card-desc">添加和管理待办事项，数据保存在本地浏览器</div>
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <input type="text" id="todoInput" placeholder="输入新的待办事项..." style="flex: 1; margin: 0;">
+                        <button class="btn btn-primary" onclick="addTodo()">添加</button>
+                    </div>
+                    <ul id="todoList" style="list-style: none;"></ul>
+                    <div class="stats-row" style="margin-top: 15px;">
+                        <div class="stat-item"><div class="stat-value" id="todoTotal">0</div><div class="stat-label">总待办</div></div>
+                        <div class="stat-item"><div class="stat-value" id="todoDone">0</div><div class="stat-label">已完成</div></div>
+                        <div class="stat-item"><div class="stat-value" id="todoPending">0</div><div class="stat-label">待完成</div></div>
+                    </div>
+                    <div class="btn-group" style="margin-top: 12px;">
+                        <button class="btn btn-primary" onclick="exportTodos()">导出JSON</button>
+                        <button class="btn btn-warning" onclick="clearDoneTodos()">清除已完成</button>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
     
-    <footer class="footer">
-        <p>文本工具集 - 一个简单实用的在线文本处理工具</p>
-        <p style="margin-top: 0.5rem;">支持中英文混合处理</p>
-    </footer>
+    <div class="global-actions">
+        <button class="float-btn btn-success" onclick="copyAllResults()" title="一键复制">📋</button>
+        <button class="float-btn btn-error" onclick="clearAllInputs()" title="清空全部">🗑️</button>
+    </div>
+    
+    <div class="toast" id="toast" style="display: none;"></div>
     
     <script>
-        const inputText = document.getElementById('inputText');
-        const outputBox = document.getElementById('outputBox');
-        const copiedHint = document.getElementById('copiedHint');
+        // 主题切换
+        const isDark = localStorage.getItem('theme') !== 'light';
+        if (!isDark) document.body.classList.add('light-mode');
+        updateThemeUI();
         
-        inputText.addEventListener('input', updateStats);
-        
-        inputText.value = 'Hello World! 你好世界！\n这是一个文本处理工具。\n支持字符统计、大小写转换、文本反转等功能。';
-        updateStats();
-        
-        function updateStats() {
-            const text = inputText.value;
-            
-            document.getElementById('charCount').textContent = text.length;
-            
-            document.getElementById('charCountNoSpace').textContent = text.replace(/\s/g, '').length;
-            
-            const words = text.trim().split(/\s+/).filter(word => word.length > 0);
-            document.getElementById('wordCount').textContent = words.length;
-            
-            const lines = text.split('\n');
-            document.getElementById('lineCount').textContent = lines.length;
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const nowDark = document.body.classList.contains('light-mode');
+            localStorage.setItem('theme', nowDark ? 'dark' : 'light');
+            updateThemeUI();
+            showToast(nowDark ? '已切换到深色模式' : '已切换到浅色模式', 'info');
         }
         
-        function processText(action) {
-            let text = inputText.value;
-            let result = '';
-            
-            switch(action) {
-                case 'uppercase':
-                    result = text.toUpperCase();
-                    break;
-                case 'lowercase':
-                    result = text.toLowerCase();
-                    break;
-                case 'capitalize':
-                    result = text.replace(/\b\w/g, char => char.toUpperCase());
-                    break;
-                case 'reverse':
-                    result = text.split('').reverse().join('');
-                    break;
-                case 'trim':
-                    result = text.replace(/\s+/g, '');
-                    break;
-                default:
-                    result = text;
+        function updateThemeUI() {
+            const nowDark = document.body.classList.contains('light-mode');
+            document.getElementById('themeIcon').textContent = nowDark ? '🌙' : '☀️';
+        }
+        
+        function toggleTips() {
+            const tipsBar = document.getElementById('tipsBar');
+            tipsBar.style.display = tipsBar.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        function switchCategory(category) {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tool-section').forEach(sec => sec.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(category + '-section').classList.add('active');
+        }
+        
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.style.display = 'flex';
+            setTimeout(() => toast.style.display = 'none', 2500);
+        }
+        
+        async function copyResultById(inputId, outputId) {
+            const result = document.getElementById(outputId).textContent;
+            if (result) {
+                await navigator.clipboard.writeText(result);
+                showToast('复制成功！', 'success');
             }
+        }
+        
+        // 本地存储相关函数
+        function saveToLocal(key, value) {
+            localStorage.setItem('toolbox_' + key, value);
+        }
+        
+        function loadFromLocal(key) {
+            return localStorage.getItem('toolbox_' + key) || '';
+        }
+        
+        function initLocalStorage() {
+            document.querySelectorAll('textarea, input[type="text"], input[type="number"], input[type="password"], input[type="date"]').forEach(el => {
+                const saved = loadFromLocal(el.id);
+                if (saved) el.value = saved;
+                el.addEventListener('input', () => saveToLocal(el.id, el.value));
+            });
+        }
+        
+        initLocalStorage();
+        
+        // ==================== 文本处理 ====================
+        function removeLineBreaks() {
+            const input = document.getElementById('removeLineInput').value;
+            document.getElementById('removeLineOutput').textContent = input.replace(/[\r\n]+/g, ' ').trim();
+            showToast('去换行完成', 'success');
+        }
+        
+        function removeDuplicates() {
+            const input = document.getElementById('removeDupInput').value;
+            const lines = input.split('\n').filter(l => l.trim());
+            const unique = [...new Set(lines)];
+            document.getElementById('removeDupOutput').textContent = unique.join('\n');
+            showToast(`已去重，保留 ${unique.length} 条`, 'success');
+        }
+        
+        function separateChineseEnglish() {
+            const input = document.getElementById('separateInput').value;
+            let chinese = '', english = '';
+            for (const c of input) {
+                if (/[\u4e00-\u9fa5]/.test(c)) chinese += c;
+                else if (/[a-zA-Z]/.test(c)) english += c;
+            }
+            document.getElementById('separateOutput').innerHTML = `【中文】${chinese || '无'}\n【英文】${english || '无'}`;
+            showToast('分离完成', 'success');
+        }
+        
+        function convertToPinyin() {
+            const input = document.getElementById('pinyinInput').value;
+            const pyMap = {'啊':'a','阿':'a','爱':'ai','安':'an','奥':'ao','八':'ba','把':'ba','百':'bai','办':'ban','帮':'bang','保':'bao','北':'bei','本':'ben','比':'bi','边':'bian','变':'bian','表':'biao','别':'bie','滨':'bin','并':'bing','拨':'bo','波':'bo','博':'bo','不':'bu','步':'bu','部':'bu','才':'cai','参':'can','藏':'cang','操':'cao','测':'ce','层':'ceng','查':'cha','产':'chan','常':'chang','场':'chang','唱':'chang','超':'chao','车':'che','陈':'chen','成':'cheng','吃':'chi','持':'chi','出':'chu','除':'chu','楚':'chu','传':'chuan','创':'chuang','春':'chun','词':'ci','次':'ci','从':'cong','村':'cun','错':'cuo','达':'da','打':'da','大':'da','代':'dai','单':'dan','但':'dan','当':'dang','党':'dang','到':'dao','道':'dao','得':'de','的':'de','等':'deng','低':'di','底':'di','弟':'di','点':'dian','电':'dian','店':'dian','调':'diao','顶':'ding','定':'ding','东':'dong','冬':'dong','动':'dong','都':'dou','读':'du','短':'duan','段':'duan','对':'dui','多':'duo','额':'e','而':'er','儿':'er','发':'fa','法':'fa','反':'fan','范':'fan','方':'fang','房':'fang','非':'fei','飞':'fei','费':'fei','分':'fen','纷':'fen','风':'feng','封':'feng','否':'fou','服':'fu','福':'fu','俯':'fu','复':'fu','该':'gai','改':'gai','感':'gan','刚':'gang','高':'gao','告':'gao','哥':'ge','个':'ge','给':'gei','跟':'gen','更':'geng','工':'gong','公':'gong','共':'gong','功':'gong','古':'gu','故':'gu','关':'guan','观':'guan','官':'guan','管':'guan','光':'guang','广':'guang','贵':'gui','国':'guo','果':'guo','过':'guo','还':'hai','孩':'hai','海':'hai','害':'hai','汉':'han','号':'hao','好':'hao','喝':'he','和':'he','何':'he','合':'he','河':'he','黑':'hei','很':'hen','红':'hong','后':'hou','呼':'hu','湖':'hu','虎':'hu','护':'hu','互':'hu','华':'hua','化':'hua','划':'hua','画':'hua','话':'hua','怀':'huai','坏':'huai','欢':'huan','环':'huan','换':'huan','黄':'huang','回':'hui','汇':'hui','会':'hui','婚':'hun','活':'huo','火':'huo','或':'huo','机':'ji','基':'ji','级':'ji','及':'ji','极':'ji','几':'ji','己':'ji','记':'ji','季':'ji','继':'ji','济':'ji','家':'jia','加':'jia','假':'jia','价':'jia','架':'jia','件':'jian','建':'jian','江':'jian','讲':'jiang','交':'jiao','脚':'jiao','角':'jiao','教':'jiao','较':'jiao','街':'jie','节':'jie','姐':'jie','解':'jie','界':'jie','借':'jie','金':'jin','今':'jin','仅':'jin','进':'jin','近':'jin','京':'jing','经':'jing','精':'jing','井':'jing','静':'jing','九':'jiu','久':'jiu','酒':'jiu','旧':'jiu','就':'jiu','举':'ju','居':'ju','局':'ju','橘':'ju','具':'ju','聚':'ju','决':'jue','觉':'jue','军':'jun','开':'kai','看':'kan','抗':'kang','考':'kao','靠':'kao','科':'ke','可':'ke','课':'ke','刻':'ke','客':'ke','空':'kong','口':'kou','哭':'ku','苦':'ku','快':'kuai','块':'kuai','宽':'kuan','况':'kuang','矿':'kuang','亏':'kui','困':'kun','拉':'la','来':'lai','蓝':'lan','老':'lao','乐':'le','勒':'le','累':'lei','类':'lei','冷':'leng','离':'li','里':'li','理':'li','礼':'li','力':'li','历':'li','立':'li','利':'li','连':'lian','联':'lian','脸':'lian','练':'lian','凉':'liang','两':'liang','亮':'liang','量':'liang','辽':'liao','了':'le','料':'liao','列':'lie','林':'lin','临':'lin','零':'ling','领':'ling','另':'ling','留':'liu','流':'liu','六':'liu','龙':'long','楼':'lou','路':'lu','旅':'lv','绿':'lv','律':'lv','论':'lun','罗':'luo','马':'ma','吗':'ma','买':'mai','卖':'mai','满':'man','慢':'man','忙':'mang','毛':'mao','没':'mei','每':'mei','美':'mei','妹':'mei','门':'men','们':'men','米':'mi','面':'mian','民':'min','明':'ming','名':'ming','命':'ming','模':'mo','末':'mo','莫':'mo','某':'mou','母':'mu','木':'mu','目':'mu','拿':'na','那':'na','娜':'na','纳':'na','呢':'ne','内':'nei','能':'neng','你':'ni','年':'nian','念':'nian','鸟':'niao','您':'nin','宁':'ning','牛':'niu','农':'nong','女':'nv','欧':'ou','怕':'pa','拍':'pai','排':'pai','派':'pai','潘':'pan','跑':'pao','朋':'peng','皮':'pi','片':'pian','票':'piao','漂':'piao','品':'pin','平':'ping','凭':'ping','普':'pu','七':'qi','期':'qi','其':'qi','奇':'qi','骑':'qi','起':'qi','气':'qi','器':'qi','去':'qu','区':'qu','曲':'qu','取':'qu','趣':'qu','全':'quan','权':'quan','确':'que','群':'qun','然':'ran','让':'rang','绕':'rao','热':'re','人':'ren','认':'ren','日':'ri','容':'rong','肉':'rou','如':'ru','入':'ru','软':'ruan','若':'ruo','三':'san','散':'san','色':'se','杀':'sha','沙':'sha','山':'shan','上':'shang','尚':'shang','少':'shao','社':'she','舍':'she','深':'shen','什':'shen','生':'sheng','声':'sheng','师':'shi','十':'shi','时':'shi','实':'shi','食':'shi','始':'shi','使':'shi','世':'shi','市':'shi','事':'shi','是':'shi','室':'shi','试':'shi','视':'shi','收':'shou','手':'shou','首':'shou','受':'shou','书':'shu','树':'shu','双':'shuang','水':'shui','睡':'shui','顺':'shun','说':'shuo','思':'si','死':'si','四':'si','松':'song','送':'song','诉':'su','速':'su','算':'suan','虽':'sui','随':'sui','岁':'sui','所':'suo','他':'ta','她':'ta','它':'ta','台':'tai','太':'tai','态':'tai','谈':'tan','汤':'tang','糖':'tang','特':'te','疼':'teng','提':'ti','题':'ti','体':'ti','天':'tian','田':'tian','条':'tiao','铁':'tie','听':'ting','停':'ting','通':'tong','同':'tong','头':'tou','图':'tu','团':'tuan','推':'tui','腿':'tui','外':'wai','玩':'wan','完':'wan','万':'wan','王':'wang','往':'wang','网':'wang','望':'wang','危':'wei','微':'wei','为':'wei','位':'wei','文':'wen','问':'wen','我':'wo','沃':'wo','屋':'wu','五':'wu','物':'wu','务':'wu','西':'xi','吸':'xi','希':'xi','息':'xi','习':'xi','洗':'xi','喜':'xi','系':'xi','下':'xia','夏':'xia','先':'xian','现':'xian','线':'xian','相':'xiang','香':'xiang','想':'xiang','向':'xiang','象':'xiang','像':'xiang','小':'xiao','校':'xiao','笑':'xiao','些':'xie','写':'xie','谢':'xie','心':'xin','新':'xin','信':'xin','兴':'xing','星':'xing','行':'xing','形':'xing','醒':'xing','姓':'xing','休':'xiu','修':'xiu','需':'xu','许':'xu','续':'xu','学':'xue','雪':'xue','血':'xue','呀':'ya','压':'ya','牙':'ya','呀':'ya','研':'yan','言':'yan','岩':'yan','眼':'yan','演':'yan','阳':'yang','养':'yang','样':'yang','药':'yao','要':'yao','爷':'ye','也':'ye','夜':'ye','业':'ye','叶':'ye','页':'ye','一':'yi','医':'yi','依':'yi','易':'yi','意':'yi','义':'yi','艺':'yi','议':'yi','因':'yin','音':'yin','银':'yin','引':'yin','印':'yin','英':'ying','应':'ying','影':'ying','硬':'ying','用':'yong','幽':'you','优':'you','由':'you','油':'you','游':'you','友':'you','有':'you','又':'you','右':'you','幼':'you','于':'yu','与':'yu','语':'yu','雨':'yu','元':'yuan','原':'yuan','园':'yuan','远':'yuan','院':'yuan','愿':'yuan','月':'yue','乐':'yue','约':'yue','越':'yue','云':'yun','运':'yun','在':'zai','咱':'zan','早':'zao','怎':'zen','增':'zeng','扎':'zha','站':'zhan','张':'zhang','找':'zhao','照':'zhao','者':'zhe','这':'zhe','真':'zhen','正':'zheng','政':'zheng','之':'zhi','知':'zhi','只':'zhi','指':'zhi','至':'zhi','治':'zhi','中':'zhong','钟':'zhong','周':'zhou','洲':'zhou','主':'zhu','住':'zhu','注':'zhu','著':'zhu','专':'zhuan','准':'zhun','着':'zhuo','字':'zi','自':'zi','资':'zi','子':'zi','紫':'zi','走':'zou','租':'zu','足':'zu','组':'zu','最':'zui','昨':'zuo','左':'zuo','作':'zuo','做':'zuo','坐':'zuo','座':'zuo'};
+            let result = '';
+            for (const c of input) {
+                result += pyMap[c] || c;
+            }
+            document.getElementById('pinyinOutput').textContent = result;
+            showToast('拼音转换完成', 'success');
+        }
+        
+        function convertSimpTrad() {
+            const input = document.getElementById('simpTradInput').value;
+            const type = document.getElementById('simpTradType').value;
+            const simpMap = {'义':'義','发':'發','华':'華','时':'時','长':'長','员':'員','开':'開','无':'無','现':'現','气':'氣','东':'東','动':'動','电':'電','学':'學','国':'國','进':'進','远':'遠','运':'運','连':'連','达':'達','过':'過','车':'車','军':'軍','农':'農','表':'錶','风':'風','龙':'龍','夺':'奪','灵':'靈','网':'網','线':'線','织':'織','总':'總','结':'結','劳':'勞','动':'動','带':'帶','业':'業','备':'備','复':'復','头':'頭','夸':'誇','夹':'夾','夺':'奪','奖':'獎','奋':'奮','奇':'奇','奈':'奈','奔':'奔','奏':'奏','契':'契','奕':'奕','女':'女','妆':'妝','妇':'婦','妈':'媽','戏':'戲','观':'觀','欢':'歡','买':'買','卖':'賣','贤':'賢','质':'質','砖':'磚','砚':'硯','砾':'礫','础':'礎','厉':'厲','压':'壓','厌':'厭','励':'勵','厕':'廁','县':'縣','区':'區','参':'參','又':'又','司':'司','同':'同','名':'名','后':'後','向':'向','吕':'呂','吗':'嗎','场':'場','块':'塊','垂':'垂','型':'型','垒':'壘','塔':'塔','墓':'墓','墙':'牆','墨':'墨','坠':'墜','备':'備','头':'頭','夸':'誇','夹':'夾','夺':'奪','奖':'獎','奋':'奮','奏':'奏','契':'契','奕':'奕','奈':'奈','奔':'奔','场':'場','块':'塊','垂':'垂','型':'型','垒':'壘','塔':'塔','墓':'墓','墙':'牆','墨':'墨','坠':'墜'};
+            const tradMap = {};
+            for (const k in simpMap) tradMap[simpMap[k]] = k;
             
-            outputBox.textContent = result;
+            const map = type === 'toTraditional' ? simpMap : tradMap;
+            let result = '';
+            for (const c of input) {
+                result += map[c] || c;
+            }
+            document.getElementById('simpTradOutput').textContent = result;
+            showToast('转换完成', 'success');
         }
         
-        function clearAll() {
-            inputText.value = '';
-            outputBox.textContent = '处理后的文本将显示在这里...';
-            updateStats();
+        // ==================== 生活工具 ====================
+        function convertTimestamp() {
+            const input = document.getElementById('timestampInput').value;
+            const type = document.getElementById('timestampType').value;
+            const output = document.getElementById('timestampOutput');
+            
+            if (type === 'toDate') {
+                const ts = parseInt(input);
+                if (!isNaN(ts)) {
+                    const date = new Date(ts > 9999999999 ? ts : ts * 1000);
+                    output.textContent = date.toLocaleString('zh-CN');
+                } else {
+                    output.textContent = '请输入有效的时间戳';
+                }
+            } else {
+                const date = new Date(input);
+                if (!isNaN(date.getTime())) {
+                    output.textContent = Math.floor(date.getTime() / 1000).toString();
+                } else {
+                    output.textContent = '请输入有效的日期';
+                }
+            }
         }
         
-        async function copyResult() {
-            const text = outputBox.textContent;
-            if (text === '处理后的文本将显示在这里...') {
+        function getCurrentTimestamp() {
+            document.getElementById('timestampInput').value = Math.floor(Date.now() / 1000).toString();
+            document.getElementById('timestampType').value = 'toDate';
+            convertTimestamp();
+        }
+        
+        function calcDateDiff() {
+            const d1 = document.getElementById('date1Input').value;
+            const d2 = document.getElementById('date2Input').value;
+            if (d1 && d2) {
+                const diff = Math.abs(new Date(d2) - new Date(d1));
+                document.getElementById('dateOutput').textContent = `相差 ${Math.floor(diff / 86400000)} 天`;
+            }
+        }
+        
+        function calcCountdown() {
+            const d1 = document.getElementById('date1Input').value;
+            if (d1) {
+                const diff = new Date(d1) - new Date();
+                if (diff > 0) {
+                    const days = Math.floor(diff / 86400000);
+                    const hours = Math.floor((diff % 86400000) / 3600000);
+                    document.getElementById('dateOutput').textContent = `距离 ${d1} 还有 ${days} 天 ${hours} 小时`;
+                } else {
+                    document.getElementById('dateOutput').textContent = '已过期的日期';
+                }
+            }
+        }
+        
+        function generateName() {
+            const type = document.getElementById('nameType').value;
+            const surnames = ['张','王','李','刘','陈','杨','赵','黄','周','吴','徐','孙','胡','朱','高','林','何','郭','马','罗'];
+            const nick1 = ['小','老','阿','大','北','南','东','西','星','月','云','风','雨','雪','花','草','木','水','火','山'];
+            const nick2 = ['猫','狗','兔','熊','鱼','鸟','虫','花','草','树','石','玉','珠','贝','星','月','云','风','雨','雪'];
+            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            
+            let result = '';
+            if (type === 'nickname') {
+                result = surnames[Math.floor(Math.random() * surnames.length)] + nick1[Math.floor(Math.random() * nick1.length)] + nick2[Math.floor(Math.random() * nick2.length)];
+            } else if (type === 'username') {
+                result = '';
+                for (let i = 0; i < 8; i++) result += chars[Math.floor(Math.random() * chars.length)];
+            } else {
+                result = nick1[Math.floor(Math.random() * nick1.length)] + nick2[Math.floor(Math.random() * nick2.length)] + (Math.floor(Math.random() * 100) + 1);
+            }
+            document.getElementById('nameOutput').textContent = result;
+        }
+        
+        function generatePassword() {
+            const len = parseInt(document.getElementById('pwdLength').value) || 16;
+            let chars = '';
+            if (document.getElementById('pwdUpper').checked) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (document.getElementById('pwdLower').checked) chars += 'abcdefghijklmnopqrstuvwxyz';
+            if (document.getElementById('pwdNumber').checked) chars += '0123456789';
+            if (document.getElementById('pwdSymbol').checked) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+            if (!chars) chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            
+            let result = '';
+            for (let i = 0; i < len; i++) result += chars[Math.floor(Math.random() * chars.length)];
+            document.getElementById('pwdOutput').textContent = result;
+        }
+        
+        function convertToChineseMoney() {
+            const input = document.getElementById('moneyInput').value;
+            const num = parseFloat(input);
+            if (isNaN(num)) {
+                document.getElementById('moneyOutput').textContent = '请输入有效数字';
+                return;
+            }
+            const units = ['仟','佰','拾','','万','仟','佰','拾','','亿'];
+            const digits = ['零','壹','贰','叁','肆','伍','陆','柒','捌','玖'];
+            const intPart = Math.floor(num);
+            const decPart = Math.round((num - intPart) * 100);
+            
+            let result = '';
+            let intStr = intPart.toString();
+            let j = 0;
+            for (let i = intStr.length - 1; i >= 0; i--) {
+                result = digits[parseInt(intStr[i])] + units[j % units.length] + result;
+                j++;
+            }
+            result = result.replace(/零仟|零佰|零拾|零+/g, '零').replace(/零+$/, '').replace(/零万/g, '万').replace(/零亿/g, '亿');
+            if (decPart > 0) {
+                const d1 = Math.floor(decPart / 10);
+                const d2 = decPart % 10;
+                result += '元' + digits[d1] + '角' + (d2 > 0 ? digits[d2] + '分' : '');
+            } else {
+                result += '元整';
+            }
+            document.getElementById('moneyOutput').textContent = result;
+        }
+        
+        // ==================== 学习办公 ====================
+        function convertBase() {
+            const input = document.getElementById('baseInput').value;
+            const from = parseInt(document.getElementById('baseFrom').value);
+            const output = document.getElementById('baseOutput');
+            
+            try {
+                const decimal = parseInt(input, from);
+                if (isNaN(decimal)) throw new Error();
+                output.innerHTML = `二进制: ${decimal.toString(2)}\n八进制: ${decimal.toString(8)}\n十进制: ${decimal.toString(10)}\n十六进制: ${decimal.toString(16).toUpperCase()}`;
+            } catch (e) {
+                output.textContent = '转换失败，请检查输入';
+            }
+        }
+        
+        function updateWordStats() {
+            const text = document.getElementById('wordCountInput').value;
+            let chinese = 0, punctuation = 0;
+            for (const c of text) {
+                if (/[\u4e00-\u9fa5]/.test(c)) chinese++;
+                else if (/[，。！？、；：""''（）【】《》·]/.test(c)) punctuation++;
+            }
+            const englishWords = text.match(/[a-zA-Z]+/g)?.length || 0;
+            const noSpace = text.replace(/\s/g, '').length;
+            const lines = text ? text.split('\n').length : 0;
+            
+            document.getElementById('wcTotal').textContent = text.length;
+            document.getElementById('wcChinese').textContent = chinese;
+            document.getElementById('wcEnglish').textContent = englishWords;
+            document.getElementById('wcNoSpace').textContent = noSpace;
+            document.getElementById('wcLines').textContent = lines;
+            document.getElementById('wcPunct').textContent = punctuation;
+        }
+        
+        function generateQR() {
+            const text = document.getElementById('qrInput').value;
+            if (!text.trim()) {
+                showToast('请输入内容', 'error');
                 return;
             }
             
-            try {
-                await navigator.clipboard.writeText(text);
-                copiedHint.classList.add('show');
-                setTimeout(() => {
-                    copiedHint.classList.remove('show');
-                }, 2000);
-            } catch (err) {
-                console.error('复制失败:', err);
+            const canvas = document.getElementById('qrcodeCanvas');
+            const ctx = canvas.getContext('2d');
+            const size = 180;
+            
+            // 使用QR码标准编码算法
+            const qrData = encodeQRCode(text);
+            const qrSize = Math.sqrt(qrData.length);
+            const cellSize = size / qrSize;
+            
+            // 清空画布并绘制白色背景
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0, 0, size, size);
+            ctx.fillStyle = '#000';
+            
+            // 绘制QR码点阵
+            for (let y = 0; y < qrSize; y++) {
+                for (let x = 0; x < qrSize; x++) {
+                    if (qrData[y * qrSize + x]) {
+                        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+                    }
+                }
+            }
+            
+            showToast('二维码已生成', 'success');
+        }
+        
+        // QR码编码核心算法
+        function encodeQRCode(text) {
+            // 选择合适的QR码版本
+            let version = 1;
+            let capacity = 25; // 版本1的容量
+            
+            if (text.length > 40) version = 2;
+            if (text.length > 77) version = 3;
+            
+            const sizes = {1: 21, 2: 25, 3: 29};
+            const qrSize = sizes[version];
+            const totalCells = qrSize * qrSize;
+            
+            // 初始化QR码数据
+            const data = new Array(totalCells).fill(false);
+            
+            // 1. 绘制定位符（三个角）
+            const drawFinder = (x, y) => {
+                for (let dy = 0; dy < 7; dy++) {
+                    for (let dx = 0; dx < 7; dx++) {
+                        const isBorder = dx === 0 || dx === 6 || dy === 0 || dy === 6;
+                        const isInner = dx >= 2 && dx <= 4 && dy >= 2 && dy <= 4;
+                        if (isBorder || isInner) {
+                            data[(y + dy) * qrSize + x + dx] = true;
+                        }
+                    }
+                }
+            };
+            
+            drawFinder(0, 0);
+            drawFinder(qrSize - 7, 0);
+            drawFinder(0, qrSize - 7);
+            
+            // 2. 绘制分隔符
+            const drawSeparator = (x, y, w, h) => {
+                for (let dy = 0; dy < h; dy++) {
+                    for (let dx = 0; dx < w; dx++) {
+                        const idx = (y + dy) * qrSize + x + dx;
+                        if (idx < totalCells) data[idx] = false;
+                    }
+                }
+            };
+            
+            drawSeparator(7, 0, 1, 7);
+            drawSeparator(0, 7, 7, 1);
+            drawSeparator(qrSize - 6, 0, 1, 7);
+            drawSeparator(qrSize - 7, 7, 7, 1);
+            drawSeparator(7, qrSize - 7, 7, 1);
+            drawSeparator(0, qrSize - 6, 1, 7);
+            
+            // 3. 绘制对齐符
+            const alignmentPatterns = {
+                1: [],
+                2: [[12, 12]],
+                3: [[15, 15], [15, 4], [4, 15]]
+            };
+            
+            alignmentPatterns[version].forEach(([ax, ay]) => {
+                for (let dy = -2; dy <= 2; dy++) {
+                    for (let dx = -2; dx <= 2; dx++) {
+                        const isBorder = Math.abs(dx) === 2 || Math.abs(dy) === 2;
+                        const isCenter = dx === 0 && dy === 0;
+                        if (isBorder || isCenter) {
+                            data[(ay + dy) * qrSize + ax + dx] = true;
+                        }
+                    }
+                }
+            });
+            
+            // 4. 绘制定时图案
+            for (let i = 8; i < qrSize - 8; i++) {
+                data[6 * qrSize + i] = i % 2 === 0;
+                data[i * qrSize + 6] = i % 2 === 0;
+            }
+            
+            // 5. 将文本转换为二进制数据
+            const binaryData = textToBinary(text);
+            
+            // 6. 填充数据位（蛇形扫描）
+            let dataIdx = 0;
+            for (let col = qrSize - 1; col >= 0; col -= 2) {
+                for (let row = qrSize - 1; row >= 0; row--) {
+                    if (canPlaceData(col, row, qrSize)) {
+                        data[row * qrSize + col] = binaryData[dataIdx % binaryData.length] === '1';
+                        dataIdx++;
+                    }
+                    if (col > 0 && canPlaceData(col - 1, row, qrSize)) {
+                        data[row * qrSize + col - 1] = binaryData[dataIdx % binaryData.length] === '1';
+                        dataIdx++;
+                    }
+                }
+            }
+            
+            return data;
+        }
+        
+        function textToBinary(text) {
+            let binary = '';
+            for (let i = 0; i < text.length; i++) {
+                const code = text.charCodeAt(i);
+                if (code <= 127) {
+                    // 数字模式或字母数字模式简化编码
+                    binary += '0100' + code.toString(2).padStart(8, '0');
+                } else {
+                    // UTF-8编码
+                    const utf8 = unescape(encodeURIComponent(text[i]));
+                    for (let j = 0; j < utf8.length; j++) {
+                        binary += utf8.charCodeAt(j).toString(2).padStart(8, '0');
+                    }
+                }
+            }
+            // 添加终止符和填充
+            binary += '0000';
+            while (binary.length % 8 !== 0) binary += '0';
+            // 添加填充字节
+            const fillBytes = ['11101100', '00010001'];
+            while (binary.length < 2000) {
+                binary += fillBytes[binary.length % 2];
+            }
+            return binary;
+        }
+        
+        function canPlaceData(x, y, qrSize) {
+            // 检查是否在定位符区域
+            const inFinder = (x < 7 && y < 7) || 
+                           (x >= qrSize - 7 && y < 7) || 
+                           (x < 7 && y >= qrSize - 7);
+            if (inFinder) return false;
+            
+            // 检查是否在分隔符区域
+            const inSeparator = (x === 6 || y === 6);
+            if (inSeparator) return false;
+            
+            // 检查是否在定时图案区域
+            if ((x === 6 || y === 6) && !(x < 7 && y < 7)) return false;
+            
+            return true;
+        }
+        
+        function downloadQR() {
+            const canvas = document.getElementById('qrcodeCanvas');
+            const url = canvas.toDataURL('image/png');
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'qrcode.png';
+            a.click();
+            showToast('下载成功', 'success');
+        }
+        
+        function formatIndent() {
+            const input = document.getElementById('indentInput').value;
+            const type = document.getElementById('indentType').value;
+            const indent = type === 'tab' ? '\t' : ' '.repeat(parseInt(type));
+            const lines = input.split('\n');
+            document.getElementById('indentOutput').textContent = lines.map(l => indent + l.trim()).join('\n');
+            showToast('排版完成', 'success');
+        }
+        
+        // ==================== 待办管理 ====================
+        let todos = JSON.parse(localStorage.getItem('todos') || '[]');
+        renderTodos();
+        
+        function addTodo() {
+            const text = document.getElementById('todoInput').value.trim();
+            if (!text) return showToast('请输入待办事项', 'error');
+            todos.push({ id: Date.now(), text, done: false });
+            localStorage.setItem('todos', JSON.stringify(todos));
+            document.getElementById('todoInput').value = '';
+            renderTodos();
+            showToast('已添加', 'success');
+        }
+        
+        function renderTodos() {
+            const list = document.getElementById('todoList');
+            list.innerHTML = todos.map(t => `
+                <li class="todo-item">
+                    <div class="todo-checkbox ${t.done ? 'checked' : ''}" onclick="toggleTodo(${t.id})"></div>
+                    <span class="todo-text ${t.done ? 'done' : ''}">${t.text}</span>
+                    <button class="todo-del" onclick="delTodo(${t.id})">删除</button>
+                </li>
+            `).join('');
+            updateTodoStats();
+        }
+        
+        function toggleTodo(id) {
+            todos = todos.map(t => t.id === id ? {...t, done: !t.done} : t);
+            localStorage.setItem('todos', JSON.stringify(todos));
+            renderTodos();
+        }
+        
+        function delTodo(id) {
+            todos = todos.filter(t => t.id !== id);
+            localStorage.setItem('todos', JSON.stringify(todos));
+            renderTodos();
+            showToast('已删除', 'info');
+        }
+        
+        function updateTodoStats() {
+            document.getElementById('todoTotal').textContent = todos.length;
+            document.getElementById('todoDone').textContent = todos.filter(t => t.done).length;
+            document.getElementById('todoPending').textContent = todos.filter(t => !t.done).length;
+        }
+        
+        function exportTodos() {
+            const blob = new Blob([JSON.stringify(todos, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'todos.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('导出成功', 'success');
+        }
+        
+        function clearDoneTodos() {
+            const count = todos.filter(t => t.done).length;
+            todos = todos.filter(t => !t.done);
+            localStorage.setItem('todos', JSON.stringify(todos));
+            renderTodos();
+            showToast(`已清除 ${count} 项已完成`, 'info');
+        }
+        
+        // ==================== 全局功能 ====================
+        function copyAllResults() {
+            const results = document.querySelectorAll('.result-box');
+            let text = '';
+            results.forEach(r => { if (r.textContent) text += r.textContent + '\n\n'; });
+            if (text) {
+                navigator.clipboard.writeText(text);
+                showToast('已复制所有结果', 'success');
             }
         }
+        
+        function clearAllInputs() {
+            document.querySelectorAll('input, textarea').forEach(el => {
+                if (el.type !== 'checkbox') el.value = '';
+            });
+            document.querySelectorAll('.result-box').forEach(el => el.textContent = '');
+            showToast('已清空', 'info');
+        }
+        
+        document.getElementById('todoInput').addEventListener('keydown', e => { if (e.key === 'Enter') addTodo(); });
     </script>
 </body>
 </html>
