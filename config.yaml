@@ -1,0 +1,83 @@
+# ============================================
+# 《无尽冬日》自动化脚本 - 全局配置文件
+# 说明: 修改本文件可自定义脚本运行参数
+# ============================================
+
+# -------------------
+# 模拟器ADB连接配置
+# -------------------
+adb:
+  host: "127.0.0.1"           # ADB服务器地址，本地默认127.0.0.1
+  port: 5555                  # 模拟器ADB调试端口，雷电默认5555，木木默认7555
+  device_name: ""             # 指定设备序列号，空字符串则自动连接第一台设备
+  screenshot_timeout: 5       # 截图超时时间(秒)
+  click_timeout: 3            # 点击操作超时时间(秒)
+
+# -------------------
+# 图像识别参数
+# -------------------
+image:
+  confidence_threshold: 0.75   # 模板匹配置信度阈值(0~1)，越高越严格
+  grayscale: true              # 是否启用灰度识别以降低干扰
+  gaussian_blur: true          # 是否启用高斯降噪
+  max_retry: 3                 # 单点识别失败最大重试次数
+  retry_interval: 1.0          # 重试间隔(秒)
+  template_dir: "templates"    # 模板图片存放目录
+
+# -------------------
+# 防检测与人机模拟
+# -------------------
+anti_detect:
+  click_offset: 8             # 点击坐标随机偏移像素范围(±8px)
+  swipe_offset: 12            # 滑动坐标随机偏移像素范围(±12px)
+  min_action_delay: 300       # 操作后最小随机停顿(ms)
+  max_action_delay: 1500      # 操作后最大随机停顿(ms)
+  min_loop_sleep: 60          # 每轮循环最小随机休眠(秒)
+  max_loop_sleep: 600         # 每轮循环最大随机休眠(秒)，默认1~10分钟
+  swipe_duration: 400         # 滑动基础持续时间(ms)，采用缓动曲线
+
+# -------------------
+# 任务模块开关与间隔
+# -------------------
+tasks:
+  city_resources:
+    enabled: true             # 是否启用主城资源收取
+    interval: 1800            # 执行间隔(秒)，默认30分钟
+  mail_reward:
+    enabled: true
+    interval: 3600            # 默认1小时
+  daily_activity:
+    enabled: true
+    interval: 3600
+  expedition:
+    enabled: true
+    interval: 600             # 探险推图间隔10分钟
+  wild_elite:
+    enabled: true
+    interval: 1200            # 野外巡逻间隔20分钟
+  alliance_welfare:
+    enabled: true
+    interval: 3600
+  popup_cleaner:
+    enabled: true
+    interval: 60              # 弹窗清理高频检测，每分钟
+  error_handler:
+    enabled: true
+    interval: 30              # 异常检测每30秒
+
+# -------------------
+# 日志配置
+# -------------------
+log:
+  level: "INFO"               # 日志级别: DEBUG/INFO/WARNING/ERROR
+  log_dir: "logs"             # 日志文件保存目录
+  max_size_mb: 10             # 单个日志文件最大大小(MB)
+  backup_count: 5             # 保留的历史日志文件数量
+  save_fail_screenshot: true  # 识别失败时是否自动截图保存
+
+# -------------------
+# 状态机配置
+# -------------------
+state:
+  idle_timeout: 300           # 空闲状态超过该时间自动进入休眠(秒)
+  long_sleep_on_fail: 300     # 连续识别失败后的长休眠时间(秒)
